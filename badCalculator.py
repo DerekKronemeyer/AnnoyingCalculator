@@ -2,8 +2,11 @@ from tkinter import *
 import math
 import tkinter.font as font
 import random
+import time
+import responses
 
 equationText = ""
+window = ""
 
 def addToEquation(character, equationBox):
     global equationText
@@ -21,15 +24,37 @@ def evaluate(equationBox):
         result = str(eval(equationText))
         answer(result, equationBox)
     except Exception as e:
-        print(e)
-        equationBox.set("Not a valid equation")
+        #print(e)
+        equationBox.set(getRandomLine("errors.txt"))
         expression = ""
 
 def answer(result, equationBox):
     global equationText
-    prefix = getRandomLine("prefixes.txt")
-    result = prefix + result
-    equationBox.set(result)
+    global window
+    method = random.randint(0, 5)
+    #method = 4
+    #print(method)
+    if method == 0:
+        prefix = getRandomLine("prefixes.txt")
+        result = prefix + result
+        equationBox.set(result)
+    elif method == 1:
+        suffix = getRandomLine("suffixes.txt")
+        result = result + suffix
+        equationBox.set(result)
+    elif method == 2:
+        insert = getRandomLine("insert.txt")
+        result = insert.replace("~", result)
+        equationBox.set(result)
+    elif method == 3:
+        equationBox.set(result)
+        title = getRandomLine("titles.txt")
+        window.title(title)
+    elif method == 4:
+        result = responses.getResponse(result)
+        equationBox.set(result)
+    else:
+        equationBox.set(result)
     equationText = ""
 
 def getRandomLine(fileName):
@@ -41,6 +66,7 @@ def getRandomLine(fileName):
     return lines[line-1]
 
 def main():
+        global window
         window = Tk()
         window.title("Bad Calculator")
         window.geometry("500x600")
